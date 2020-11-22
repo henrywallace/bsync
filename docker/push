@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+
+: "${PROJECT:=$(gcloud config get-value project)}"
+: "${IMAGE:=gcr.io/$PROJECT/bsync}"
+: "${TAGS:="
+latest
+"}"
+
+dir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
+build=$dir/build
+
+rm -rf "$build"
+mkdir "$build"
+
+cp "$dir/Dockerfile" "$build"
+
+cd "$dir/../go"
+CGO_ENABLED=0 go build -o "$build" ./cmd/bsync
+
+cd "$build"
+for tag in $TAGS; do
+  docker build -t "$IMAGE:$tag" .
+  docker push "$IMAGE:$tag"
+done
