@@ -1,7 +1,14 @@
 # bsync
 
-Syncing buckets to local paths, and watching updates via bucket events.
-Currently only supports Google Cloud Storage.
+Sync bucket contents to a local directory, and watch remote changes to keep
+local state up to date. Currently only supports Google Cloud Storage.
+
+Some motivating use cases are:
+- As an init container to copy bucket contents for a web server.
+- As a sidecar container to continuously watch for bucket changes, and update
+  local assets for a web server.
+
+## Examples
 
 For example, here we do a oneshot sync between the source bucket and some local
 directory with
@@ -29,6 +36,6 @@ Which will first run the oneshot sync, and then run forever watching events and
 updating the local path with both new files, changes to existing files, and
 removed files.
 
-References:
+## References:
 - [1] https://cloud.google.com/storage/docs/reporting-changes
 - [2] https://cloud.google.com/pubsub/docs/admin#manage_subs
